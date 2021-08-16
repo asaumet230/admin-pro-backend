@@ -16,13 +16,8 @@ app.use(cors());
 app.use( express.json() );
 
 // Rutas:
-app.get('/', (req, res) => {
-
-    return res.status(200).json({
-        ok: true,
-        message: 'Todo ok'
-    });
-});
+app.use('/api/usuarios', require('./routes/usuarios'));
+app.use('/api/login', require('./routes/auth'));
 
 
 app.listen(process.env.PORT, ()=> {
