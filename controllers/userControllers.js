@@ -55,12 +55,29 @@ exports.crearUsuario = async (req, res = response) => {
 
 exports.getUsuario = async (req, res = response) => {
 
-    const usuarios = await Usuarios.find({}, 'nombre email role google');
+    // Metodo para crear paginación:
+
+    const desde = Number(req.query.desde) || 0;
+
+    /* 
+        Con skip seleccionas desde donde quieres filtrar, con el limit son el limite de registros que quieres que el usuario vea,
+        Con estimatedDocumentCount muestras el total de registros y se hace de la forma siguiente porque esos dos procesos se deben ejecutar a la vez:
+    */ 
+
+    const [usuarios, total ] = await Promise.all([
+        Usuarios.
+                find({}, 'nombre email role google img')
+                .skip( desde )
+                .limit( 5 ),
+
+        Usuarios.estimatedDocumentCount()
+    ]);
 
     return res.status(200).json({
         ok: true,
         msg: 'Get todos los usuarios',
-        usuarios
+        usuarios,
+        total
     })
 }
 
