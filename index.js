@@ -15,6 +15,10 @@ app.use(cors());
 // Habilitar body parser
 app.use( express.json() );
 
+
+// Habilitar directorio publico:
+app.use( express.static('public') );
+
 // Rutas:
 app.use('/api/usuarios', require('./routes/usuarios'));
 app.use('/api/hospitales', require('./routes/hospitales'));
