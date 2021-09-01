@@ -62,16 +62,73 @@ const crearHospital = async (req, res = response, next) => {
     }
 }
 
-const actualizarHospital = (req, res = response, next) => {
+const actualizarHospital = async (req, res = response, next) => {
+
+    const nuevoNombre = req.body.nombre;
+    const _id = req.params.id; 
+    const uid = req.uid;
+
+    try {
+
+        const hospital = await Hospitales.findById({ _id });
+
+        if( !hospital ) {
+
+            return res.status(404).json({
+                ok: false,
+                msg: 'No existe hospital por es id'
+            });
+        }
+
+        hospital.nombre = nuevoNombre;
+        hospital.usuario = uid;
+        await hospital.save();
+
+        return res.status(200).json({
+            ok: true,
+            msg: 'Nombre del hospital actualizado correctamente',
+            hospital
+        });
 
 
-    return res.status(200).json({
-        ok: true,
-        msg: 'Desde actualizar hospitales'
-    })
+    } catch(error) {
+        console.log(error);
+        return res.status(500).json({
+            ok: false,
+            msg: 'Comuniquese con el administrador'
+        });
+    }
 }
 
-const borrarHospital = (req, res = response, next) => {
+const borrarHospital = async (req, res = response, next) => {
+
+    const _id = req.params.id;
+
+    try {
+        
+        const hospital = await Hospitales.findById({ _id });
+
+        if(!hospital) {
+            return  res.status(400).json({
+                ok: false,
+                msg:'No existe hospital con ese id'
+            });
+        }
+
+        await Hospitales.findByIdAndDelete({ _id });
+
+        return res.status(200).json({
+            ok: true,
+            msg: 'Hospital eliminado exitosamente'
+        });
+        
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({
+            ok: false,
+            msg:'Comuniquese con el administrador'
+        })
+    }
 
 
     return res.status(200).json({
