@@ -9,6 +9,10 @@ const hospitalesSchema = Schema({
     img : {
         type: String
     },
+    hospital: {
+        type: String,
+        require: true
+    },
     usuario: {
         type: Schema.Types.ObjectId,
         ref: 'Usuarios',

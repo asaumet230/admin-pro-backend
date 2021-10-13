@@ -10,12 +10,26 @@ const obtenerHospitales = async (req, res = response, next) => {
             Con el metodo populate puedes acceder a los datos de la colección usuario 
             que la relacionamos con la colección de hospitales
         */
+
+        const desde = Number(req.query.desde) || 0;
        
-        const hospitales  = await Hospitales.find().populate('usuario', 'nombre img');
+        const [ hospitales, total ] = await Promise.all([
+
+            Hospitales
+                .find()
+                .populate('usuario', 'nombre img')
+                .skip( desde )
+                .limit(5),
+
+                Hospitales.estimatedDocumentCount()
+            
+        ]);
+        
 
         return res.status(200).json({
             ok: true,
-            hospitales
+            hospitales,
+            total
         })
         
     } catch (error) {
@@ -30,7 +44,7 @@ const obtenerHospitales = async (req, res = response, next) => {
 
 const crearHospital = async (req, res = response, next) => {
 
-    const { nombre, imagen } = req.body;
+    const { nombre } = req.body;
 
     try {
 

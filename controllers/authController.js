@@ -101,12 +101,30 @@ const googleSignIn = async (req, res= response ,next) => {
 const renewToken = async( req, res= response) => {
 
     const uid = req.uid;
-    const token = await generarJWT(uid);
 
-    return res.status(200).json({
-        ok: true,
-        token
-    })
+    try {
+
+        const usuario = await Usuarios.findById({_id: uid}).select('nombre google role email img');
+        
+        const token = await generarJWT(uid);
+
+        return res.status(200).json({
+            ok: true,
+            token,
+            usuario
+        });
+
+    } catch(error) {
+        console.log(error);
+        return res.status(200).json({
+            ok: true,
+            token
+        })
+    }
+ 
+    
+
+   
 
 
 

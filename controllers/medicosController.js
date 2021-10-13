@@ -6,7 +6,6 @@ const crearMedico = async (req, res = response ) => {
 
     const { nombre } = req.body;
 
-
     try {
 
         let medico = await Medicos.findOne({nombre});
@@ -23,12 +22,15 @@ const crearMedico = async (req, res = response ) => {
         medico.usuario = req.uid;
         await medico.save();
 
+        console.log(medico);
+        
         return res.status(200).json({
             ok: true,
             msg: 'Medico creado exitosamente',
             medico
         })
         
+
         
     } catch (error) {
         console.log(error);
@@ -61,9 +63,6 @@ const obtenerMedicos = async (req, res = response ) => {
         })
         
     }
-
- 
-
 }
 
 
@@ -146,9 +145,42 @@ const borrarMedico = async (req, res = response ) => {
 }
 
 
+const obtenerMedico = async( req, res=response ) => {
+
+    const _id = req.params.id;
+
+    try {
+        
+        const medico = await Medicos.findById({_id})
+            .populate('usuario', 'nombre img')
+            .populate('hospital', 'nombre img');
+
+        if(!medico) {
+            return res.status(400).json({
+                ok: false,
+                msg: 'El id del médico no es valido'
+            });
+        }
+
+        return res.status(200).json({
+            ok: true,
+            medico
+        });
+        
+    } catch (error) {
+        console.log(error);
+        return  res.status(500).json({
+            ok: false,
+            msg: 'Error comuniquese con su adminstrador'
+        });  
+    }
+
+} 
+
 module.exports = {
     crearMedico,
     obtenerMedicos,
+    obtenerMedico,
     actualizarMedico,
     borrarMedico
 }

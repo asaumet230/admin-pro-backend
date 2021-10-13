@@ -116,8 +116,19 @@ exports.actualizarUsuario = async(req, res= response) => {
 
         // Si no existe el email se lo agregas al objeto de campos y actualizas el usuario:
 
-        campos.email = email;
+        if( !usuarioDB.google ) {
 
+             campos.email = email;
+
+        } else if( usuarioDB.email !== email ) {
+
+            return res.status(500).json({
+                    ok: false,
+                    msg: 'los usuarios de google no pueden cambiar el correo'
+                })
+
+        }
+       
         const usuarioActualizado = await Usuarios.findByIdAndUpdate(_id, campos, { new: true });
 
         // Si existe retornamos:

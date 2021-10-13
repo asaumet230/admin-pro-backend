@@ -16,7 +16,10 @@ const {
 
 const router = Router();
 
-router.get('/', obtenerHospitales);
+router.get('/',[ 
+    validarJWT 
+]
+,obtenerHospitales);
 
 router.post('/',[
 

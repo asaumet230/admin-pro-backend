@@ -17,7 +17,7 @@ router.use(expressFileUpload()); // Aquí habilitamos la libreria utilizamos el 
 
 router.put('/:tipo/:id', validarJWT, fileUpload );
 
-router.get('/:tipo/:imagen', validarJWT, obtenerImagen)
+router.get('/:tipo/:imagen', obtenerImagen)
 
 
 module.exports = router;
