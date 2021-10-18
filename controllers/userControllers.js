@@ -6,6 +6,7 @@ const { generarJWT } = require('../helpers/jwt');
 
 
 
+
 exports.crearUsuario = async (req, res = response) => {
 
 
@@ -41,7 +42,7 @@ exports.crearUsuario = async (req, res = response) => {
             ok: true,
             msg: 'Usuario creado exitosamente',
             usuario,
-            token
+            token,
         })
         
     } catch (error) {
@@ -102,7 +103,7 @@ exports.actualizarUsuario = async(req, res= response) => {
         const {password, google, email, ...campos} = req.body;
 
         if(usuarioDB.email !== email ){
-
+        
             const emailExiste = await Usuarios.findOne({ email });
 
             if( emailExiste ) {

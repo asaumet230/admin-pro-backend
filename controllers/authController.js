@@ -5,6 +5,7 @@ const Usuarios = require('../models/Usuario');
 
 const { generarJWT } = require('../helpers/jwt');
 const { googleVerify } = require('../helpers/google-verify');
+const { getMenuFrontend } = require('../helpers/menu-frontend');
 
 const login = async(req, res= response) => {
 
@@ -36,8 +37,9 @@ const login = async(req, res= response) => {
 
        return res.status(200).json({
             ok: true,
-            token
-        })
+            token,
+            menu: getMenuFrontend( usuarioDB.role )
+        });
         
     } catch (error) {
         console.log(error);
@@ -86,7 +88,8 @@ const googleSignIn = async (req, res= response ,next) => {
        
        return res.status(200).json({
             ok: true,
-            token
+            token,
+            menu: getMenuFrontend( usuario.role )
         });
         
     } catch (error) {
@@ -111,22 +114,18 @@ const renewToken = async( req, res= response) => {
         return res.status(200).json({
             ok: true,
             token,
-            usuario
+            usuario,
+            menu: getMenuFrontend ( usuario.role )
         });
 
     } catch(error) {
         console.log(error);
-        return res.status(200).json({
-            ok: true,
-            token
+        return res.status(400).json({
+            ok: false,
+            msg: 'comuniquese con el administrador'
+            
         })
     }
- 
-    
-
-   
-
-
 
 }
 
